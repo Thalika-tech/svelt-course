@@ -9,7 +9,7 @@ interface ReturnObject {
 }
 
 export const actions = {
-  default: async ({ request }) => {
+  default: async ({ request, locals: { supabase } }) => {
     const formData = request.formData();
 
     const name = (await formData).get("name") as string;
@@ -44,9 +44,6 @@ export const actions = {
     }
 
     // Registration flow with superbase
-    // NB: Use resend to setup a custom smtp server for all users to access the app
-
-    const supabase = createClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY);
 
     const { data, error } = await supabase.auth.signUp({
       email,
