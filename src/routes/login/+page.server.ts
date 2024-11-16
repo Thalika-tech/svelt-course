@@ -5,8 +5,8 @@ interface ReturnObject {
   success: boolean;
   email: string;
   password: string;
-  passwordConfirmation: string;
-  name: string;
+  passwordConfirmation?: never;
+  name?: never;
   errors: string[];
 }
 
@@ -14,23 +14,15 @@ export const actions = {
   default: async ({ request, locals: { supabase } }) => {
     const formData = request.formData();
 
-    const name = (await formData).get("name") as string;
     const email = (await formData).get("email") as string;
     const password = (await formData).get("password") as string;
-    const passwordConfirmation = (await formData).get("passwordConfirmation") as string;
 
     const returnObject: ReturnObject = {
       success: true,
       email,
       password,
-      passwordConfirmation,
-      name,
       errors: [],
     };
-
-    if (name.length < 3) {
-      returnObject.errors.push("The name is too short. Must be at lease 3 characters.");
-    }
 
     if (!email.length) {
       returnObject.errors.push("Email is required.");
@@ -40,17 +32,13 @@ export const actions = {
       returnObject.errors.push("Password is required.");
     }
 
-    if (password !== passwordConfirmation) {
-      returnObject.errors.push("Password do not match.");
-    }
-
     if (returnObject.errors.length) {
       returnObject.success = false;
       return returnObject;
     }
 
-    // Registration flow with superbase
-    const { data, error } = await supabase.auth.signUp({
+    // Sign In flow with superbase
+    const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });

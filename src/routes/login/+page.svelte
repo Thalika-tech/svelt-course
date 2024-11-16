@@ -4,4 +4,4 @@
   $inspect(form);
 </script>
 
-<AuthForm isRegistration={true} {form}/>
+<AuthForm isRegistration={false} {form}/>
