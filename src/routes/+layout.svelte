@@ -7,17 +7,14 @@
 
     let {children, data}  = $props();
     // Derived: anytime data changes, we want to update our session, supabase and user proprty
-    let {session, supabase, user} = $derived(data);
+    let {session, supabase} = $derived(data);
     // Set the global context in the layout.svelte that wraps around the main route
     let userState = setUserState({session: data.session, supabase: data.supabase, user: data.user})
 
     // Remember effect = useEffect, don't specify dependencies, all variables used inside acts as dependancies
     $effect(() => {
-        userState.updateState({session, supabase, user})
-    });
-
-    $effect(() => {
         const { data } = supabase.auth.onAuthStateChange((_, newSession) => {
+            userState.updateState({session: newSession, supabase, user: newSession?.user || null})
 			if (newSession?.expires_at !== session?.expires_at) {
 				invalidate('supabase:auth');
 			}

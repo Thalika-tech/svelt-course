@@ -60,6 +60,10 @@ export const actions = {
       return fail(400, returnObject as any);
     }
 
+    // Select table from superbase - reference supabase docs
+    const userId = data.user.id;
+    await supabase.from("user_names").insert([{ user_id: userId, name }]);
+
     redirect(303, " /private/dashboard");
   },
 } satisfies Actions;
