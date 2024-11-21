@@ -49,7 +49,7 @@ export const actions = {
       return fail(400, returnObject as any);
     }
 
-    redirect(303, " /private/dashboard");
+    redirect(303, "/private/dashboard");
   },
 
   googleLogin: async ({ locals: { supabase } }) => {

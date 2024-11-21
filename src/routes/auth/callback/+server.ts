@@ -13,13 +13,13 @@ export const GET: RequestHandler = async ({ url, locals: { supabase } }) => {
     const userId = sessionData.data.session.user.id;
     const userName = sessionData.data.session.user.user_metadata.name;
 
-    const { data: existinUser, error: selectError } = await supabase.from("user_names").select("name").eq("userId", userId).single();
+    const { data: existingUser, error: selectError } = await supabase.from("user_names").select("name").eq("user_id", userId).single();
 
-    if (selectError && selectError.code !== "PGRT116") {
+    if (selectError && selectError.code !== "PGRST116") {
       return new Response("Failed to check for existing user", { status: 500 });
     }
 
-    if (!existinUser) {
+    if (!existingUser) {
       const { error: insertError } = await supabase.from("user_names").insert([{ user_id: userId, name: userName }]);
 
       if (insertError) {

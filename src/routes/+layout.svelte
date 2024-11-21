@@ -4,7 +4,6 @@
     import { invalidate } from '$app/navigation';
     import { setUserState } from "$lib/state/user-state.svelte";
 
-
     let {children, data}  = $props();
     // Derived: anytime data changes, we want to update our session, supabase and user proprty
     let {session, supabase} = $derived(data);
@@ -14,7 +13,7 @@
     // Remember effect = useEffect, don't specify dependencies, all variables used inside acts as dependancies
     $effect(() => {
         const { data } = supabase.auth.onAuthStateChange((_, newSession) => {
-            userState.updateState({session: newSession, supabase, user: newSession?.user || null})
+            userState.updateState({session: newSession, supabase, user: newSession?.user || null});
 			if (newSession?.expires_at !== session?.expires_at) {
 				invalidate('supabase:auth');
 			}
@@ -26,4 +25,5 @@
 </script>
 
 <Header />
+
 {@render children()}
